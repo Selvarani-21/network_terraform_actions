@@ -1,0 +1,44 @@
+name : Terraform CI CD Pipeline for Deploying AWS Resources
+run-name : ${{github.actor}} has triggered the Pipeline
+
+on:
+  push:
+  branches:
+   -'main'
+
+envi:
+  AWS_Access_Key: ${{ AWS_Access_Key:}}
+  AWS_Secret_Access_Key: ${{AWS_Secret_Access_Key:}}
+
+  jobs: 
+   build-infra:
+   name: terraform-ci-cd
+   runs-on: ubuntu-latest
+   steps:
+      -name: Checkout
+      uses: actions/checkout@v2
+      -name: Set up Terraform
+      uses: hashicrop/setup-terraform@v2
+
+      -name: Terraform init
+      id : init
+      run: terraform init
+      working-directory: ./terraform
+
+      -name: Terraform validate
+      id : validate
+      run: terraform validate
+      working-directory: ./terraform
+
+      name: Terraform plan
+      id : plan
+      run: terraform plan
+      working-directory: ./terraform
+
+      name: Terraform Apply
+      id : Apply
+      run: terraform Apply  -- auto approve
+      working-directory: ./terraform
+
+
+      
